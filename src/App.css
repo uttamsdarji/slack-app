@@ -1,0 +1,124 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #1b1d21;
+  color: #fff;
+  height: 100vh;
+  overflow: auto;
+}
+
+.App .channel-name-bar {
+  padding: 20px;
+  border-bottom: 1px solid #36383a;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.App .text-input-wrapper {
+  padding: 20px;
+}
+
+.App .text-input-container {
+  padding: 15px;
+  border: 1px solid #36383a;
+  border-radius: 10px;
+}
+
+.App .text-input-container textarea {
+  width: 100%;
+  height: 60px;
+  margin-bottom: 10px;
+  background: transparent;
+  border: none;
+  outline: none !important;
+  color: #fff;
+  font-size: 16px;
+  resize: none;
+}
+
+.App .text-input-container .submit-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.App .text-input-container .submit-container .submit-btn {
+  width: 120px;
+  height: 30px;
+}
+
+.App .text-input-container .submit-container .submit-btn button {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #007a5a;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: 5px;
+}
+
+.App .text-input-container .submit-container .submit-btn button:disabled {
+  cursor: default;
+  background-color: #36383a;
+}
+
+.App .no-msg-container {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.App .messages-list-container {
+  overflow: auto;
+  margin-top: 20px;
+}
+
+.App .messages-list-container .messages-list {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.App .messages-list-container .messages-list .message-item {
+  padding: 10px 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.App .messages-list-container .messages-list .message-item:hover {
+  background-color: #36383a;
+}
+
+.App .messages-list-container .messages-list .message-item .user-photo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.App .messages-list-container .messages-list .message-item .user-photo-container .user-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+}
+
+.App .messages-list-container .messages-list .message-item .message-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.App .messages-list-container .messages-list .message-item .message-meta .user-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.App .messages-list-container .messages-list .message-item .message-meta .msg-time {
+  font-size: 12px;
+  color: #909294;
+}
