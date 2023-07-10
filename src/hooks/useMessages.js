@@ -8,7 +8,7 @@ const useMessages = () => {
   const [newMessage, setNewMessage] = useState((null));
   useEffect(() => {
     setMessageLoading(true)
-    let baseUrl = process.env.NODE_ENV == 'development' ? 'http://127.0.0.1:3002' : 'https://slackapi.uttamsdarji.online';
+    let baseUrl = process.env.NODE_ENV == 'development' ? 'http://127.0.0.1:3002' : 'https://slack.uttamsdarji.online:3002';
     axios.get(`${baseUrl}/get-messages`).then((response) => {
       if (response?.data?.length > 0) {
         setMessages(response.data);
@@ -17,7 +17,7 @@ const useMessages = () => {
     }).catch(() => {
       setMessageLoading(false)
     })
-    let wssUrl = process.env.NODE_ENV == 'development' ? 'ws://localhost:3003' : 'wss://slackapi.uttamsdarji.online:3003';
+    let wssUrl = process.env.NODE_ENV == 'development' ? 'ws://localhost:3003' : 'wss://slack.uttamsdarji.online:3003';
     let socket = new WebSocket(wssUrl);
     socket.onopen = function(e) {
       console.log("connection established")
@@ -46,7 +46,7 @@ const useMessages = () => {
   }
   const publishMessage = (text) => {
     setPublishLoading(true);
-    let baseUrl = process.env.NODE_ENV == 'development' ? 'http://127.0.0.1:3002' : 'https://slackapi.uttamsdarji.online';
+    let baseUrl = process.env.NODE_ENV == 'development' ? 'http://127.0.0.1:3002' : 'https://slack.uttamsdarji.online:3002';
     axios.post(`${baseUrl}/publish-message`, { text }).then((response) => {
       setPublishLoading(false)
     }).catch(() => {
