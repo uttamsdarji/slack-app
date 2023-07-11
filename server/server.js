@@ -4,7 +4,10 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const ws = require('ws')
+const ws = require('ws');
+const https = require('https');
+const http = require('http');
+const fs = require('fs');
 require('dotenv').config();
 
 //slack app
@@ -84,7 +87,13 @@ async function publishMessage(id, text) {
 })();
 
 //express app
+const privateKey  = process.env.NODE_ENV == 'production' ? fs.readFileSync('/etc/letsencrypt/live/slack.uttamsdarji.online/privkey.pem', 'utf8') : '';
+const certificate = process.env.NODE_ENV == 'production' ? fs.readFileSync('/etc/letsencrypt/live/slack.uttamsdarji.online/cert.pem', 'utf8') : '';
+
+const credentials = { key: privateKey, cert: certificate };
+
 const app = express();
+
 const wsServer = new ws.Server({ port: process.env.SOCKET_PORT })
 
 app.use(cors({origin: '*'}));
@@ -176,6 +185,15 @@ app.post('/get-events-data', async (req, res) => {
   res.status(200).end()
 })
 
-app.listen(process.env.EXPRESS_PORT, () => {
-  console.log(`Server app listening on port ${process.env.EXPRESS_PORT}`)
-})
+if (process.env.NODE_ENV == 'production') {
+  const httpServer = http.createServer(app);
+  const httpsServer = https.createServer(credentials, app);
+  httpsServer.listen(process.env.EXPRESS_PORT, () => {
+    console.log(`Server app listening on port ${process.env.EXPRESS_PORT}`)
+  })
+} else {
+  app.listen(process.env.EXPRESS_PORT, () => {
+    console.log(`Server app listening on port ${process.env.EXPRESS_PORT}`)
+  })
+}
+
