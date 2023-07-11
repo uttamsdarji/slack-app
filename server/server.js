@@ -87,9 +87,9 @@ async function publishMessage(id, text) {
 })();
 
 //express app
-const privateKey  = process.env.NODE_ENV == 'production' ? fs.readFileSync('/etc/letsencrypt/live/slack.uttamsdarji.online/privkey.pem', 'utf8') : '';
-const certificate = process.env.NODE_ENV == 'production' ? fs.readFileSync('/etc/letsencrypt/live/slack.uttamsdarji.online/cert.pem', 'utf8') : '';
-const ca = process.env.NODE_ENV == 'production' ? fs.readFileSync('/etc/letsencrypt/live/slack.uttamsdarji.online/chain.pem', 'utf8') : '';
+const privateKey  = process.env.NODE_ENV == 'production' ? fs.readFileSync('/etc/letsencrypt/live/slackapi.uttamsdarji.online/privkey.pem', 'utf8') : '';
+const certificate = process.env.NODE_ENV == 'production' ? fs.readFileSync('/etc/letsencrypt/live/slackapi.uttamsdarji.online/cert.pem', 'utf8') : '';
+const ca = process.env.NODE_ENV == 'production' ? fs.readFileSync('/etc/letsencrypt/live/slackapi.uttamsdarji.online/chain.pem', 'utf8') : '';
 
 const credentials = { key: privateKey, cert: certificate, ca: ca };
 
@@ -189,8 +189,11 @@ app.post('/get-events-data', async (req, res) => {
 if (process.env.NODE_ENV == 'production') {
   const httpServer = http.createServer(app);
   const httpsServer = https.createServer(credentials, app);
-  httpsServer.listen(process.env.EXPRESS_PORT, () => {
-    console.log(`HTTPS Server app listening on port ${process.env.EXPRESS_PORT}`)
+  httpsServer.listen(443, () => {
+    console.log(`HTTPS Server app listening on port 443`)
+  })
+  httpServer.listen(80, () => {
+    console.log(`HTTP Server app listening on port 80`)
   })
 } else {
   app.listen(process.env.EXPRESS_PORT, () => {

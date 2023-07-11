@@ -4,7 +4,7 @@ import axios from 'axios';
 const useUsers = () => {
   const [users, setUsers] = useState([]);
   useEffect(() => {
-    let url = (process.env.NODE_ENV == 'development' ? 'http://127.0.0.1:3002' : 'https://slack.uttamsdarji.online:3002') + '/get-users';
+    let url = (process.env.NODE_ENV == 'development' ? 'http://127.0.0.1:3002' : 'https://slackapi.uttamsdarji.online') + '/get-users';
     axios.get(url).then((response) => {
       if (response?.data) {
         setUsers(response.data)
