@@ -95,6 +95,8 @@ const credentials = { key: privateKey, cert: certificate, ca: ca };
 
 const app = express();
 
+app.use(express.static(__dirname, { dotfiles: 'allow' } ));
+
 const wsServer = new ws.Server({ port: process.env.SOCKET_PORT })
 
 app.use(cors({origin: '*'}));
