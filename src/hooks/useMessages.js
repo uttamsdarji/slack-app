@@ -17,7 +17,7 @@ const useMessages = () => {
     }).catch(() => {
       setMessageLoading(false)
     })
-    let wssUrl = process.env.NODE_ENV == 'development' ? 'ws://localhost:3003' : 'wss://slackapi.uttamsdarji.online/ws';
+    let wssUrl = process.env.NODE_ENV == 'development' ? 'ws://localhost:3002' : 'wss://slackapi.uttamsdarji.online';
     let socket = new WebSocket(wssUrl);
     socket.onopen = function(e) {
       console.log("connection established")

@@ -95,13 +95,16 @@ const credentials = { key: privateKey, cert: certificate, ca: ca };
 
 const app = express();
 
-app.use(express.static(__dirname, { dotfiles: 'allow' } ));
-
-const wsServer = new ws.Server({ port: process.env.SOCKET_PORT })
+app.use(express.static(__dirname, { dotfiles: 'allow' }));
 
 app.use(cors({origin: '*'}));
 
 app.use(bodyParser.json());
+
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
+
+const wsServer = new ws.Server({ noServer: true })
 
 wsServer.on('connection', socket => {
   socket.on('message', data => {
@@ -125,11 +128,19 @@ wsServer.on('connection', socket => {
   })
 })
 
-app.on('upgrade', (request, socket, head) => {
-  wsServer.handleUpgrade(request, socket, head, socket => {
-    wsServer.emit('connection', socket, request)
+if (process.env.NODE_ENV == 'production') {
+  httpsServer.on('upgrade', (request, socket, head) => {
+    wsServer.handleUpgrade(request, socket, head, socket => {
+      wsServer.emit('connection', socket, request)
+    })
   })
-})
+} else {
+  httpServer.on('upgrade', (request, socket, head) => {
+    wsServer.handleUpgrade(request, socket, head, socket => {
+      wsServer.emit('connection', socket, request)
+    })
+  })
+}
 
 // hold a reference to our singleton
 app.websocketServer = wsServer
@@ -189,8 +200,6 @@ app.post('/get-events-data', async (req, res) => {
 })
 
 if (process.env.NODE_ENV == 'production') {
-  const httpServer = http.createServer(app);
-  const httpsServer = https.createServer(credentials, app);
   httpsServer.listen(443, () => {
     console.log(`HTTPS Server app listening on port 443`)
   })
@@ -198,7 +207,7 @@ if (process.env.NODE_ENV == 'production') {
     console.log(`HTTP Server app listening on port 80`)
   })
 } else {
-  app.listen(process.env.EXPRESS_PORT, () => {
+  httpServer.listen(process.env.EXPRESS_PORT, () => {
     console.log(`Server app listening on port ${process.env.EXPRESS_PORT}`)
   })
 }
