@@ -104,7 +104,7 @@ app.use(bodyParser.json());
 const httpServer = http.createServer(app);
 const httpsServer = https.createServer(credentials, app);
 
-const wsServer = new ws.Server({ noServer: true })
+const wsServer = new ws.Server({ server: process.env.NODE_ENV == 'production' ? httpsServer : httpServer })
 
 wsServer.on('connection', socket => {
   socket.on('message', data => {
@@ -128,19 +128,19 @@ wsServer.on('connection', socket => {
   })
 })
 
-if (process.env.NODE_ENV == 'production') {
-  httpsServer.on('upgrade', (request, socket, head) => {
-    wsServer.handleUpgrade(request, socket, head, socket => {
-      wsServer.emit('connection', socket, request)
-    })
-  })
-} else {
-  httpServer.on('upgrade', (request, socket, head) => {
-    wsServer.handleUpgrade(request, socket, head, socket => {
-      wsServer.emit('connection', socket, request)
-    })
-  })
-}
+// if (process.env.NODE_ENV == 'production') {
+//   httpsServer.on('upgrade', (request, socket, head) => {
+//     wsServer.handleUpgrade(request, socket, head, socket => {
+//       wsServer.emit('connection', socket, request)
+//     })
+//   })
+// } else {
+//   httpServer.on('upgrade', (request, socket, head) => {
+//     wsServer.handleUpgrade(request, socket, head, socket => {
+//       wsServer.emit('connection', socket, request)
+//     })
+//   })
+// }
 
 // hold a reference to our singleton
 app.websocketServer = wsServer
